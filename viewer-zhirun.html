@@ -16,6 +16,8 @@
         .pdf-container { width: min(960px, calc(100vw - 24px)); margin: 12px auto 24px; display: flex; flex-direction: column; gap: 12px; }
         .page { background: #fff; border: 1px solid #eaeaea; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
         .page canvas { width: 100%; height: auto; display: block; }
+        .page-skeleton { height: 220px; display: grid; place-items: center; color: #777; font-size: 12px; background: linear-gradient(90deg, #fafafa 25%, #f1f1f1 37%, #fafafa 63%); background-size: 400% 100%; animation: pulse 1.2s ease-in-out infinite; }
+        @keyframes pulse { from { background-position: 100% 50%; } to { background-position: 0 50%; } }
         .error { color: #b42318; }
     </style>
 </head>
@@ -34,58 +36,84 @@
         const statusEl = document.getElementById("status");
         const container = document.getElementById("pdfContainer");
         let pdfDoc = null;
-        let renderToken = 0;
+        const rendered = new Set();
+        const rendering = new Set();
+        let observer = null;
 
         pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-        async function renderAllPages() {
-            if (!pdfDoc) return;
-            const currentToken = ++renderToken;
+        function calcScale(page) {
+            const viewport = page.getViewport({ scale: 1 });
+            const containerWidth = container.clientWidth || 900;
+            return Math.min(Math.max(containerWidth / viewport.width, 0.6), 1.4);
+        }
+
+        function buildPlaceholders() {
             container.innerHTML = "";
-
             for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum += 1) {
-                if (currentToken !== renderToken) return;
+                const pageEl = document.createElement("section");
+                pageEl.className = "page";
+                pageEl.dataset.page = String(pageNum);
 
+                const skeleton = document.createElement("div");
+                skeleton.className = "page-skeleton";
+                skeleton.textContent = `第 ${pageNum} 页加载中...`;
+                pageEl.appendChild(skeleton);
+
+                container.appendChild(pageEl);
+            }
+        }
+
+        async function renderPage(pageNum) {
+            if (!pdfDoc || rendered.has(pageNum) || rendering.has(pageNum)) return;
+            rendering.add(pageNum);
+            try {
                 const page = await pdfDoc.getPage(pageNum);
-                const viewport = page.getViewport({ scale: 1 });
-                const containerWidth = container.clientWidth || 900;
-                const scale = Math.max(containerWidth / viewport.width, 0.5);
-                const scaledViewport = page.getViewport({ scale });
-
-                const pageWrapper = document.createElement("section");
-                pageWrapper.className = "page";
+                const viewport = page.getViewport({ scale: calcScale(page) });
+                const pageEl = container.querySelector(`section[data-page="${pageNum}"]`);
+                if (!pageEl) return;
 
                 const canvas = document.createElement("canvas");
                 const context = canvas.getContext("2d");
-                canvas.width = Math.floor(scaledViewport.width);
-                canvas.height = Math.floor(scaledViewport.height);
-                pageWrapper.appendChild(canvas);
-                container.appendChild(pageWrapper);
+                canvas.width = Math.floor(viewport.width);
+                canvas.height = Math.floor(viewport.height);
 
-                await page.render({ canvasContext: context, viewport: scaledViewport }).promise;
+                pageEl.innerHTML = "";
+                pageEl.appendChild(canvas);
+                await page.render({ canvasContext: context, viewport }).promise;
+                rendered.add(pageNum);
+            } finally {
+                rendering.delete(pageNum);
             }
+        }
+
+        function setupLazyRender() {
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const pageNum = Number(entry.target.dataset.page);
+                    renderPage(pageNum);
+                    observer.unobserve(entry.target);
+                });
+            }, { root: null, rootMargin: "900px 0px", threshold: 0.01 });
+
+            container.querySelectorAll("section.page").forEach((pageEl) => observer.observe(pageEl));
         }
 
         async function init() {
             try {
                 const task = pdfjsLib.getDocument(pdfUrl);
                 pdfDoc = await task.promise;
-                statusEl.textContent = `共 ${pdfDoc.numPages} 页，可在线预览`;
-                await renderAllPages();
+                statusEl.textContent = `共 ${pdfDoc.numPages} 页，已启用快速预览`;
+                buildPlaceholders();
+                await renderPage(1);
+                setupLazyRender();
             } catch (error) {
                 statusEl.classList.add("error");
                 statusEl.innerHTML = 'PDF 加载失败，请<a href="./智润农芯——基于AI处方的智能保水剂精准投放系统.pdf" target="_blank" rel="noopener noreferrer">点击这里直接打开</a>。';
                 console.error(error);
             }
         }
-
-        let resizeTimer = null;
-        window.addEventListener("resize", () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                renderAllPages();
-            }, 150);
-        });
 
         init();
     </script>
