@@ -1,0 +1,29 @@
+{
+  "redirects": [
+    {
+      "source": "/resume",
+      "destination": "/index.html",
+      "permanent": true
+    },
+    {
+      "source": "/resume.html",
+      "destination": "/index.html",
+      "permanent": true
+    },
+    {
+      "source": "/viewer-resume",
+      "destination": "/viewer-resume.html",
+      "permanent": true
+    },
+    {
+      "source": "/viewer-zhirun",
+      "destination": "/viewer-zhirun.html",
+      "permanent": true
+    },
+    {
+      "source": "/viewer-semi-secret",
+      "destination": "/viewer-semi-secret.html",
+      "permanent": true
+    }
+  ]
+}
