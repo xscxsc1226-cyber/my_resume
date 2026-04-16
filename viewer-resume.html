@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简历预览</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fb; color: #111; }
+        .topbar { height: 56px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; background: #fff; border-bottom: 1px solid #eaeaea; }
+        .title { font-size: 15px; font-weight: 600; }
+        .back { color: #333; text-decoration: none; font-size: 14px; }
+        .viewer { width: 100%; height: calc(100vh - 56px); border: 0; }
+        .fallback { padding: 12px 20px; font-size: 13px; color: #666; background: #fff; border-bottom: 1px solid #eaeaea; }
+        .fallback a { color: #000; }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="title">简历预览</div>
+        <a class="back" href="./resume.html">返回首页</a>
+    </div>
+    <div class="fallback">如浏览器未显示预览，可<a href="./简历.pdf" target="_blank" rel="noopener noreferrer">点击这里打开 PDF</a>。</div>
+    <iframe class="viewer" src="./简历.pdf#zoom=page-width"></iframe>
+</body>
+</html>
