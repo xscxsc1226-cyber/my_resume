@@ -26,13 +26,13 @@
         <div class="title">简历预览</div>
         <a class="back" href="./index.html">返回首页</a>
     </div>
-    <div class="fallback">如浏览器未显示预览，可<a href="./简历.pdf" target="_blank" rel="noopener noreferrer">点击这里打开 PDF</a>。</div>
+    <div class="fallback">如浏览器未显示预览，可<a href="./肖思晨-南京大学-实习时长六个月.pdf" target="_blank" rel="noopener noreferrer">点击这里打开 PDF</a>。</div>
     <div id="status" class="status">正在加载 PDF...</div>
     <main id="pdfContainer" class="pdf-container"></main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
-        const pdfUrl = "./简历.pdf";
+        const pdfUrl = "./肖思晨-南京大学-实习时长六个月.pdf";
         const statusEl = document.getElementById("status");
         const container = document.getElementById("pdfContainer");
         let pdfDoc = null;
@@ -110,7 +110,7 @@
                 setupLazyRender();
             } catch (error) {
                 statusEl.classList.add("error");
-                statusEl.innerHTML = 'PDF 加载失败，请<a href="./简历.pdf" target="_blank" rel="noopener noreferrer">点击这里直接打开</a>。';
+                statusEl.innerHTML = 'PDF 加载失败，请<a href="./肖思晨-南京大学-实习时长六个月.pdf" target="_blank" rel="noopener noreferrer">点击这里直接打开</a>。';
                 console.error(error);
             }
         }
