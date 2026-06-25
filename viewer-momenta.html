@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momenta 实习工作展示</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FBF2E3;
+            --paper: #fffaf0;
+            --ink: #2e2924;
+            --ink-soft: #4a4138;
+            --muted: #837365;
+            --line: rgba(46, 41, 36, 0.12);
+            --pink: #EB507E;
+            --pink-soft: #F1939C;
+            --yellow: #FED71A;
+            --yellow-soft: #F8DF72;
+            --shadow: 0 18px 38px rgba(46, 41, 36, 0.12);
+            --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-hand: 'Caveat', 'Noto Sans SC', cursive;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-sans);
+            background:
+                radial-gradient(circle at 12% 8%, rgba(248, 223, 114, 0.38), transparent 34%),
+                radial-gradient(circle at 88% 0%, rgba(241, 147, 156, 0.28), transparent 32%),
+                var(--bg);
+            color: var(--ink);
+            line-height: 1.75;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.16;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        a { color: inherit; }
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(18px);
+            background: rgba(251, 242, 227, 0.86);
+            border-bottom: 1px solid var(--line);
+        }
+        .nav {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .brand {
+            font-family: var(--font-hand);
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--pink);
+        }
+        .back {
+            text-decoration: none;
+            font-size: 14px;
+            color: var(--ink-soft);
+            padding: 8px 14px;
+            border: 1px dashed rgba(235, 80, 126, 0.36);
+            border-radius: 999px;
+            background: rgba(255, 250, 240, 0.72);
+        }
+
+        .page {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 64px 24px 96px;
+            position: relative;
+        }
+        .hero {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 42px;
+            align-items: end;
+            margin-bottom: 56px;
+        }
+        .eyebrow {
+            font-family: var(--font-hand);
+            font-size: 24px;
+            color: var(--pink);
+            margin-bottom: 14px;
+        }
+        h1 {
+            font-size: clamp(42px, 7vw, 86px);
+            line-height: 1.02;
+            letter-spacing: -3px;
+            margin-bottom: 20px;
+        }
+        h1 span {
+            color: var(--pink);
+            position: relative;
+        }
+        h1 span::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            right: -4px;
+            bottom: 8px;
+            height: 12px;
+            background: rgba(248, 223, 114, 0.7);
+            border-radius: 999px;
+            z-index: -1;
+        }
+        .intro {
+            color: var(--ink-soft);
+            font-size: 16px;
+            max-width: 680px;
+        }
+        .note-card {
+            background: var(--paper);
+            border: 1px dashed rgba(235, 80, 126, 0.36);
+            border-radius: 28px;
+            padding: 26px;
+            box-shadow: var(--shadow);
+            transform: rotate(1deg);
+        }
+        .note-card h2 {
+            font-family: var(--font-hand);
+            font-size: 32px;
+            color: var(--pink);
+            margin-bottom: 10px;
+        }
+        .note-card p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin: 42px 0 64px;
+        }
+        .summary-item {
+            background: rgba(255, 250, 240, 0.8);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 18px;
+        }
+        .summary-label {
+            font-family: var(--font-hand);
+            font-size: 22px;
+            color: var(--pink);
+            margin-bottom: 4px;
+        }
+        .summary-value {
+            color: var(--ink-soft);
+            font-size: 14px;
+        }
+
+        .case {
+            margin-top: 64px;
+            background: rgba(255, 250, 240, 0.62);
+            border: 1px solid var(--line);
+            border-radius: 32px;
+            padding: 34px;
+        }
+        .case + .case { margin-top: 34px; }
+        .case-head {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 28px;
+            margin-bottom: 30px;
+        }
+        .case-kicker {
+            font-family: var(--font-hand);
+            font-size: 22px;
+            color: var(--pink);
+        }
+        .case h2 {
+            font-size: clamp(28px, 4vw, 46px);
+            line-height: 1.16;
+            letter-spacing: -1.2px;
+            margin-top: 4px;
+        }
+        .case p {
+            color: var(--ink-soft);
+            font-size: 15px;
+        }
+        .points {
+            display: grid;
+            gap: 12px;
+        }
+        .point {
+            display: flex;
+            gap: 12px;
+            color: var(--ink-soft);
+            font-size: 14px;
+        }
+        .point::before {
+            content: '';
+            width: 16px;
+            height: 2px;
+            background: var(--pink);
+            margin-top: 13px;
+            flex: 0 0 auto;
+            border-radius: 999px;
+        }
+        .point strong { color: var(--ink); }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-top: 26px;
+        }
+        .shot {
+            display: block;
+            text-decoration: none;
+            background: var(--paper);
+            border-radius: 24px;
+            border: 1px solid var(--line);
+            overflow: hidden;
+            box-shadow: 0 10px 24px rgba(46, 41, 36, 0.08);
+            transition: transform 0.28s ease, box-shadow 0.28s ease;
+        }
+        .shot:hover {
+            transform: translateY(-4px) rotate(-0.4deg);
+            box-shadow: var(--shadow);
+        }
+        .shot img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+            filter: saturate(0.9) contrast(1.02);
+        }
+        .shot figcaption {
+            padding: 14px 16px 16px;
+            color: var(--ink-soft);
+            font-size: 13px;
+        }
+        .shot figcaption strong {
+            display: block;
+            color: var(--ink);
+            margin-bottom: 2px;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(46, 41, 36, 0.72);
+            backdrop-filter: blur(14px);
+        }
+        .lightbox.open { display: flex; }
+        .lightbox-panel {
+            width: min(1120px, 100%);
+            max-height: calc(100vh - 48px);
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            background: var(--paper);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
+        }
+        .lightbox-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--line);
+        }
+        .lightbox-title {
+            font-size: 14px;
+            color: var(--ink-soft);
+            font-weight: 600;
+        }
+        .lightbox-close,
+        .lightbox-nav {
+            border: 1px solid var(--line);
+            background: rgba(255, 250, 240, 0.92);
+            color: var(--ink);
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .lightbox-close {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            font-size: 24px;
+            line-height: 1;
+        }
+        .lightbox-close:hover,
+        .lightbox-nav:hover {
+            background: var(--yellow-soft);
+            transform: translateY(-1px);
+        }
+        .lightbox-body {
+            position: relative;
+            min-height: 0;
+            background: #111;
+            display: grid;
+            place-items: center;
+        }
+        .lightbox-img {
+            max-width: 100%;
+            max-height: calc(100vh - 190px);
+            display: block;
+            object-fit: contain;
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            font-size: 28px;
+            display: grid;
+            place-items: center;
+            opacity: 0.92;
+        }
+        .lightbox-nav:hover { transform: translateY(-50%) scale(1.04); }
+        .lightbox-prev { left: 16px; }
+        .lightbox-next { right: 16px; }
+        .lightbox-caption {
+            padding: 14px 18px 16px;
+            color: var(--ink-soft);
+            font-size: 14px;
+            border-top: 1px solid var(--line);
+        }
+        .lightbox-counter {
+            font-family: var(--font-hand);
+            color: var(--pink);
+            font-size: 20px;
+            margin-left: 8px;
+        }
+
+        .closing {
+            margin-top: 54px;
+            padding: 28px 32px;
+            border-radius: 28px;
+            background: linear-gradient(120deg, rgba(248, 223, 114, 0.45), rgba(241, 147, 156, 0.28));
+            color: var(--ink-soft);
+            border: 1px dashed rgba(235, 80, 126, 0.36);
+        }
+        .closing strong { color: var(--ink); }
+
+        @media (max-width: 860px) {
+            .hero,
+            .case-head {
+                grid-template-columns: 1fr;
+            }
+            .summary,
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            .page { padding: 44px 18px 72px; }
+            .case { padding: 24px; border-radius: 24px; }
+            .lightbox { padding: 12px; }
+            .lightbox-panel { border-radius: 18px; max-height: calc(100vh - 24px); }
+            .lightbox-img { max-height: calc(100vh - 170px); }
+            .lightbox-nav { width: 40px; height: 40px; font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <nav class="nav">
+            <div class="brand">Momenta Internship</div>
+            <a class="back" href="./index.html#experience">返回实习经历</a>
+        </nav>
+    </header>
+
+    <main class="page">
+        <section class="hero">
+            <div>
+                <div class="eyebrow">Selected Work · Desensitized Case Study</div>
+                <h1>把 CPM 的重复流程，做成可复用的 <span>业务工具</span></h1>
+                <p class="intro">
+                    在 Momenta 客户项目管理实习期间，我围绕自驾量产项目协同中的信息同步、任务追踪、文档生成与进度复盘等高频场景，设计并搭建了轻量化工具原型。由于项目涉及内部业务流程与客户信息，本页仅展示脱敏后的界面截图与产品设计思路，不展示源代码、真实业务数据或内部文档。
+                </p>
+            </div>
+            <aside class="note-card">
+                <h2>为什么这样展示？</h2>
+                <p>
+                    相比直接展示程序或代码，这里用“问题 - 方案 - 能力”的方式说明我的工作贡献：既能让访问者理解工具价值，也能避开保密风险。
+                </p>
+            </aside>
+        </section>
+
+        <section class="summary" aria-label="工作概览">
+            <div class="summary-item">
+                <div class="summary-label">Role</div>
+                <div class="summary-value">CPM 实习生 / 业务工具设计</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Scenario</div>
+                <div class="summary-value">客户项目管理、跨部门协同、周报复盘</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Method</div>
+                <div class="summary-value">Claude Code + Skill + 前后端页面设计</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Value</div>
+                <div class="summary-value">减少重复沟通，提升进度同步与信息处理效率</div>
+            </div>
+        </section>
+
+        <section class="case">
+            <div class="case-head">
+                <div>
+                    <div class="case-kicker">Tool 01</div>
+                    <h2>CPM Agent：面向日常业务的 AI 工作助手</h2>
+                </div>
+                <div class="points">
+                    <div class="point"><span><strong>问题:</strong> Claude Code 的终端操作模式无法完全适配 CPM 日常业务场景，业务同学更需要结构化、低门槛、可重复使用的流程入口。</span></div>
+                    <div class="point"><span><strong>方案:</strong> 通过 Skill 搭配前后端交互设计，把飞书文档、日程安排、代码编写、记录查询等高频动作封装成更贴近业务语境的工作台。</span></div>
+                    <div class="point"><span><strong>我的贡献:</strong> 梳理业务场景与输入字段，设计工具工作流、交互入口与信息输出形式，让 AI 能更稳定地服务具体 CPM 流程。</span></div>
+                </div>
+            </div>
+
+            <div class="gallery">
+                <a class="shot" href="./assets/momenta/cpm-agent-home.png">
+                    <figure>
+                        <img src="./assets/momenta/cpm-agent-home.png" alt="CPM Agent 首页截图">
+                        <figcaption><strong>业务入口</strong>将“发版链接、日程、代码、日报”等功能集中到 CPM 日常工作台。</figcaption>
+                    </figure>
+                </a>
+                <a class="shot" href="./assets/momenta/cpm-agent-workflow.png">
+                    <figure>
+                        <img src="./assets/momenta/cpm-agent-workflow.png" alt="CPM Agent 工作流页面截图">
+                        <figcaption><strong>工作流编排</strong>把 AI 对话、飞书读取、HTTP 请求、条件判断等能力拆成可组合节点。</figcaption>
+                    </figure>
+                </a>
+                <a class="shot" href="./assets/momenta/cpm-agent-skills.png">
+                    <figure>
+                        <img src="./assets/momenta/cpm-agent-skills.png" alt="CPM Agent Skills 管理截图">
+                        <figcaption><strong>链接现有 AI 生态</strong>接入公司已有 AI 能力，将skills、MCP等机制集中到统一入口，一站式解决 CPM 日常 AI 相关问题。</figcaption>
+                    </figure>
+                </a>
+                <a class="shot" href="./assets/momenta/cpm-agent-generate.png">
+                    <figure>
+                        <img src="./assets/momenta/cpm-agent-generate.png" alt="CPM Agent 发版操作流程截图">
+                        <figcaption><strong>发版操作流程</strong>将版本号、车型、核心信息与文档链接结构化输入，降低重复填写成本。</figcaption>
+                    </figure>
+                </a>
+            </div>
+        </section>
+
+        <section class="case">
+            <div class="case-head">
+                <div>
+                    <div class="case-kicker">Tool 02</div>
+                    <h2>项目进度看板：让团队进度、风险与周报自动浮现</h2>
+                </div>
+                <div class="points">
+                    <div class="point"><span><strong>问题:</strong> 多车型、多任务、多负责人并行推进时，进度分散在不同沟通链路中，容易出现信息滞后、延期风险发现不及时。</span></div>
+                    <div class="point"><span><strong>方案:</strong> 搭建项目看板，将任务、负责人、状态、DDL 与延期情况统一可视化，并提供筛选、统计、告警与周报生成功能。</span></div>
+                    <div class="point"><span><strong>我的贡献:</strong> 从 CPM 管理视角定义字段、状态和看板逻辑，围绕“追踪 - 告警 - 复盘”设计闭环，提高团队同步效率。</span></div>
+                </div>
+            </div>
+
+            <div class="gallery">
+                <a class="shot" href="./assets/momenta/project-board-main.png">
+                    <figure>
+                        <img src="./assets/momenta/project-board-main.png" alt="项目进度看板主视图截图">
+                        <figcaption><strong>任务看板</strong>按项目、负责人、状态和时间轴展示任务进度，直观看到阻塞和延期。</figcaption>
+                    </figure>
+                </a>
+                <a class="shot" href="./assets/momenta/project-board-stats.png">
+                    <figure>
+                        <img src="./assets/momenta/project-board-stats.png" alt="项目进度看板数据概览截图">
+                        <figcaption><strong>数据概览</strong>汇总任务总数、延期、已完成与临期情况，帮助 CPM 快速判断风险。</figcaption>
+                    </figure>
+                </a>
+                <a class="shot" href="./assets/momenta/project-board-report.png">
+                    <figure>
+                        <img src="./assets/momenta/project-board-report.png" alt="项目周报生成截图">
+                        <figcaption><strong>周报生成</strong>自动整理已完成、延期与待推进任务，减少手动汇总和反复核对。</figcaption>
+                    </figure>
+                </a>
+                <a class="shot" href="./assets/momenta/project-board-actions.png">
+                    <figure>
+                        <img src="./assets/momenta/project-board-actions.png" alt="项目看板任务操作截图">
+                        <figcaption><strong>状态操作</strong>支持任务状态更新与删除等轻量交互，让进度维护更贴近日常工作流。</figcaption>
+                    </figure>
+                </a>
+            </div>
+        </section>
+
+        <section class="closing">
+            <strong>展示边界:</strong> 本页仅用于说明我在实习中的产品思考、业务工具设计与效率优化能力。截图已作为界面示意使用，详细业务规则、客户信息、真实项目数据与代码实现均不在网页中展示。
+        </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+        <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="图片预览">
+            <div class="lightbox-top">
+                <div class="lightbox-title">
+                    图片预览 <span class="lightbox-counter" id="lightboxCounter"></span>
+                </div>
+                <button class="lightbox-close" id="lightboxClose" type="button" aria-label="关闭预览">×</button>
+            </div>
+            <div class="lightbox-body">
+                <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="上一张">‹</button>
+                <img class="lightbox-img" id="lightboxImg" src="" alt="">
+                <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="下一张">›</button>
+            </div>
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const shots = Array.from(document.querySelectorAll('.shot'));
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            const caption = document.getElementById('lightboxCaption');
+            const counter = document.getElementById('lightboxCounter');
+            const closeBtn = document.getElementById('lightboxClose');
+            const prevBtn = document.getElementById('lightboxPrev');
+            const nextBtn = document.getElementById('lightboxNext');
+            let activeIndex = 0;
+
+            const getCaptionText = (shot) => {
+                const title = shot.querySelector('figcaption strong')?.textContent.trim() || '';
+                const full = shot.querySelector('figcaption')?.textContent.trim() || '';
+                return title ? full.replace(title, `${title}：`) : full;
+            };
+
+            const render = () => {
+                const shot = shots[activeIndex];
+                const preview = shot.querySelector('img');
+                img.src = shot.getAttribute('href');
+                img.alt = preview?.alt || '截图预览';
+                caption.textContent = getCaptionText(shot);
+                counter.textContent = `${activeIndex + 1} / ${shots.length}`;
+            };
+
+            const open = (index) => {
+                activeIndex = index;
+                render();
+                lightbox.classList.add('open');
+                lightbox.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                closeBtn.focus();
+            };
+
+            const close = () => {
+                lightbox.classList.remove('open');
+                lightbox.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            };
+
+            const move = (step) => {
+                activeIndex = (activeIndex + step + shots.length) % shots.length;
+                render();
+            };
+
+            shots.forEach((shot, index) => {
+                shot.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    open(index);
+                });
+            });
+
+            closeBtn.addEventListener('click', close);
+            prevBtn.addEventListener('click', () => move(-1));
+            nextBtn.addEventListener('click', () => move(1));
+            lightbox.addEventListener('click', (event) => {
+                if (event.target === lightbox) close();
+            });
+            document.addEventListener('keydown', (event) => {
+                if (!lightbox.classList.contains('open')) return;
+                if (event.key === 'Escape') close();
+                if (event.key === 'ArrowLeft') move(-1);
+                if (event.key === 'ArrowRight') move(1);
+            });
+        })();
+    </script>
+</body>
+</html>

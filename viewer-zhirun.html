@@ -7,20 +7,115 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fb; color: #111; }
-        .topbar { height: 56px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; background: #fff; border-bottom: 1px solid #eaeaea; }
+        .topbar { height: 56px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; background: #fff; border-bottom: 1px solid #eaeaea; position: sticky; top: 0; z-index: 10; }
         .title { font-size: 15px; font-weight: 600; }
         .back { color: #333; text-decoration: none; font-size: 14px; }
-        .viewer { width: 100%; height: calc(100vh - 56px); border: 0; }
         .fallback { padding: 12px 20px; font-size: 13px; color: #666; background: #fff; border-bottom: 1px solid #eaeaea; }
         .fallback a { color: #000; }
+        .status { padding: 12px 20px; color: #555; font-size: 13px; }
+        .pdf-container { width: min(960px, calc(100vw - 24px)); margin: 12px auto 24px; display: flex; flex-direction: column; gap: 12px; }
+        .page { background: #fff; border: 1px solid #eaeaea; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+        .page canvas { width: 100%; height: auto; display: block; }
+        .page-skeleton { height: 220px; display: grid; place-items: center; color: #777; font-size: 12px; background: linear-gradient(90deg, #fafafa 25%, #f1f1f1 37%, #fafafa 63%); background-size: 400% 100%; animation: pulse 1.2s ease-in-out infinite; }
+        @keyframes pulse { from { background-position: 100% 50%; } to { background-position: 0 50%; } }
+        .error { color: #b42318; }
     </style>
 </head>
 <body>
     <div class="topbar">
         <div class="title">智润农芯项目预览</div>
-        <a class="back" href="./resume.html">返回首页</a>
+        <a class="back" href="./index.html">返回首页</a>
     </div>
     <div class="fallback">如浏览器未显示预览，可<a href="./智润农芯——基于AI处方的智能保水剂精准投放系统.pdf" target="_blank" rel="noopener noreferrer">点击这里打开 PDF</a>。</div>
-    <iframe class="viewer" src="./智润农芯——基于AI处方的智能保水剂精准投放系统.pdf#zoom=page-width"></iframe>
+    <div id="status" class="status">正在加载 PDF...</div>
+    <main id="pdfContainer" class="pdf-container"></main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        const pdfUrl = "./智润农芯——基于AI处方的智能保水剂精准投放系统.pdf";
+        const statusEl = document.getElementById("status");
+        const container = document.getElementById("pdfContainer");
+        let pdfDoc = null;
+        const rendered = new Set();
+        const rendering = new Set();
+        let observer = null;
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+        function calcScale(page) {
+            const viewport = page.getViewport({ scale: 1 });
+            const containerWidth = container.clientWidth || 900;
+            return Math.min(Math.max(containerWidth / viewport.width, 0.6), 1.4);
+        }
+
+        function buildPlaceholders() {
+            container.innerHTML = "";
+            for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum += 1) {
+                const pageEl = document.createElement("section");
+                pageEl.className = "page";
+                pageEl.dataset.page = String(pageNum);
+
+                const skeleton = document.createElement("div");
+                skeleton.className = "page-skeleton";
+                skeleton.textContent = `第 ${pageNum} 页加载中...`;
+                pageEl.appendChild(skeleton);
+
+                container.appendChild(pageEl);
+            }
+        }
+
+        async function renderPage(pageNum) {
+            if (!pdfDoc || rendered.has(pageNum) || rendering.has(pageNum)) return;
+            rendering.add(pageNum);
+            try {
+                const page = await pdfDoc.getPage(pageNum);
+                const viewport = page.getViewport({ scale: calcScale(page) });
+                const pageEl = container.querySelector(`section[data-page="${pageNum}"]`);
+                if (!pageEl) return;
+
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+                canvas.width = Math.floor(viewport.width);
+                canvas.height = Math.floor(viewport.height);
+
+                pageEl.innerHTML = "";
+                pageEl.appendChild(canvas);
+                await page.render({ canvasContext: context, viewport }).promise;
+                rendered.add(pageNum);
+            } finally {
+                rendering.delete(pageNum);
+            }
+        }
+
+        function setupLazyRender() {
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const pageNum = Number(entry.target.dataset.page);
+                    renderPage(pageNum);
+                    observer.unobserve(entry.target);
+                });
+            }, { root: null, rootMargin: "900px 0px", threshold: 0.01 });
+
+            container.querySelectorAll("section.page").forEach((pageEl) => observer.observe(pageEl));
+        }
+
+        async function init() {
+            try {
+                const task = pdfjsLib.getDocument(pdfUrl);
+                pdfDoc = await task.promise;
+                statusEl.textContent = `共 ${pdfDoc.numPages} 页，已启用快速预览`;
+                buildPlaceholders();
+                await renderPage(1);
+                setupLazyRender();
+            } catch (error) {
+                statusEl.classList.add("error");
+                statusEl.innerHTML = 'PDF 加载失败，请<a href="./智润农芯——基于AI处方的智能保水剂精准投放系统.pdf" target="_blank" rel="noopener noreferrer">点击这里直接打开</a>。';
+                console.error(error);
+            }
+        }
+
+        init();
+    </script>
 </body>
 </html>
