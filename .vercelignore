@@ -1,0 +1,15 @@
+# Publish website files only; local work materials stay outside the deployment.
+*
+!index.html
+!viewer-momenta.html
+!viewer-resume.html
+!viewer-semi-secret.html
+!viewer-zhirun.html
+!xsc-resume.pdf
+!涉密网1.pdf
+!智润农芯——基于AI处方的智能保水剂精准投放系统.pdf
+!assets/
+!assets/**
+!robots.txt
+!sitemap.xml
+!vercel.json

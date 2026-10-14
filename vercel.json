@@ -16,6 +16,11 @@
   ],
   "redirects": [
     {
+      "source": "/肖思晨-南京大学-可实习时长六个月以上.pdf",
+      "destination": "/xsc-resume.pdf",
+      "permanent": false
+    },
+    {
       "source": "/resume",
       "destination": "/index.html",
       "permanent": true
