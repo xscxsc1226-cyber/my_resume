@@ -16,7 +16,7 @@
 - `assets/site.js`、`assets/case.js`：导航、邮箱复制及图片放大功能。
 - `viewer-zhirun.html`、`viewer-semi-secret.html`：原有项目资料的历史访问地址。
 
-本次内容依据 2026 年 10 月提供的最新简历更新。历史中文简历文件名同时保留，并在 Vercel 上转向 `/xsc-resume.pdf`。
+本次内容依据 2026 年 10 月提供的最新简历更新。历史中文简历文件名同时保留，内容与 `/xsc-resume.pdf` 保持一致。
 
 ## 发布
 
